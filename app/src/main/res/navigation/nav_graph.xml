@@ -18,6 +18,34 @@
         tools:layout="@layout/fragment_expenses" />
 
     <fragment
+        android:id="@+id/groupsFragment"
+        android:name="com.ayush.snap2sheet.ui.groups.GroupsFragment"
+        android:label="Groups"
+        tools:layout="@layout/fragment_groups">
+
+        <action
+            android:id="@+id/action_groupsFragment_to_groupDetailFragment"
+            app:destination="@id/groupDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupDetailFragment"
+        android:name="com.ayush.snap2sheet.ui.groups.GroupDetailFragment"
+        android:label="Group Detail"
+        tools:layout="@layout/fragment_group_detail">
+
+        <action
+            android:id="@+id/action_groupDetailFragment_to_addGroupExpenseFragment"
+            app:destination="@id/addGroupExpenseFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addGroupExpenseFragment"
+        android:name="com.ayush.snap2sheet.ui.groups.AddGroupExpenseFragment"
+        android:label="Add Group Expense"
+        tools:layout="@layout/fragment_add_group_expense" />
+
+    <fragment
         android:id="@+id/analyticsFragment"
         android:name="com.ayush.snap2sheet.ui.analytics.AnalyticsFragment"
         android:label="Analytics"

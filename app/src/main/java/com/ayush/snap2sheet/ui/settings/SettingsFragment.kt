@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.ayush.snap2sheet.databinding.FragmentSettingsBinding
+import com.ayush.snap2sheet.ui.auth.AuthActivity
 import com.ayush.snap2sheet.utils.CsvExporter
 import com.ayush.snap2sheet.utils.ViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -34,10 +36,15 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Show user info
+        val user = FirebaseAuth.getInstance().currentUser
+        binding.tvUserName.text = user?.displayName ?: "User"
+        binding.tvUserEmail.text = user?.email ?: ""
+
         binding.btnClearData.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setTitle("Clear All Data")
-                .setMessage("Are you sure you want to delete all expenses? This cannot be undone.")
+                .setMessage("Are you sure you want to delete all your personal expenses? This cannot be undone.")
                 .setPositiveButton("Clear") { _, _ ->
                     viewModel.clearAllData()
                     Toast.makeText(requireContext(), "All data cleared", Toast.LENGTH_SHORT).show()
@@ -57,6 +64,19 @@ class SettingsFragment : Fragment() {
                     Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        binding.btnLogout.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Logout") { _, _ ->
+                    FirebaseAuth.getInstance().signOut()
+                    startActivity(Intent(requireContext(), AuthActivity::class.java))
+                    requireActivity().finish()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
     }
 

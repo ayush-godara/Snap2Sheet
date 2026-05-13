@@ -9,6 +9,10 @@
         android:icon="@android:drawable/ic_menu_recent_history"
         android:title="Expenses" />
     <item
+        android:id="@+id/groupsFragment"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Groups" />
+    <item
         android:id="@+id/analyticsFragment"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="Analytics" />

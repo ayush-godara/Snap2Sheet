@@ -5,37 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".ui.scan.ScanFragment">
+    tools:context=".ui.groups.AddGroupExpenseFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Scan Receipt"
-            android:textSize="24sp"
-            android:textStyle="bold"
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@android:drawable/ic_menu_revert"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_subtitle"
+            android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Capture a receipt photo or upload a screenshot from Zepto, Blinkit, etc."
-            android:textColor="#757575"
-            android:textSize="13sp"
+            android:layout_marginStart="8dp"
+            android:text="Add Group Expense"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btn_back"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+            app:layout_constraintStart_toEndOf="@id/btn_back"
+            app:layout_constraintTop_toTopOf="@id/btn_back" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_capture"
+            android:id="@+id/btn_camera"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,7 +45,7 @@
             android:text="📷 Camera"
             app:layout_constraintEnd_toStartOf="@id/btn_gallery"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_subtitle" />
+            app:layout_constraintTop_toBottomOf="@id/btn_back" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_gallery"
@@ -55,8 +56,8 @@
             android:layout_marginTop="16dp"
             android:text="🖼️ Gallery"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_capture"
-            app:layout_constraintTop_toBottomOf="@id/tv_subtitle" />
+            app:layout_constraintStart_toEndOf="@id/btn_camera"
+            app:layout_constraintTop_toBottomOf="@id/btn_back" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_merchant"
@@ -66,7 +67,7 @@
             android:hint="Merchant Name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_capture">
+            app:layout_constraintTop_toBottomOf="@id/btn_camera">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_merchant"
@@ -107,26 +108,15 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_category_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Category (auto-detected)"
-            android:textSize="13sp"
-            android:textColor="#757575"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_date" />
-
         <Spinner
             android:id="@+id/spinner_category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
             android:entries="@array/categories_array"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_category_label" />
+            app:layout_constraintTop_toBottomOf="@id/til_date" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
@@ -134,7 +124,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
-            android:text="Save Expense"
+            android:text="Add to Group"
             android:textSize="16sp"
             app:cornerRadius="12dp"
             app:layout_constraintBottom_toBottomOf="parent"

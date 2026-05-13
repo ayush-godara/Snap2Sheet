@@ -1,7 +1,5 @@
 package com.ayush.snap2sheet.ui.scan
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +8,7 @@ import com.ayush.snap2sheet.data.Expense
 import com.ayush.snap2sheet.data.ExpenseRepository
 import com.ayush.snap2sheet.utils.OCRHelper
 import com.ayush.snap2sheet.utils.ReceiptData
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class ScanViewModel(
@@ -25,6 +24,9 @@ class ScanViewModel(
     private val _saveStatus = MutableLiveData<Boolean>()
     val saveStatus: LiveData<Boolean> = _saveStatus
 
+    private val userId: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
     fun processImage(context: android.content.Context, uri: android.net.Uri) {
         _isLoading.value = true
         viewModelScope.launch {
@@ -36,7 +38,7 @@ class ScanViewModel(
 
     fun saveExpense(expense: Expense) {
         viewModelScope.launch {
-            repository.insertExpense(expense)
+            repository.insertExpense(expense.copy(userId = userId))
             _saveStatus.postValue(true)
         }
     }

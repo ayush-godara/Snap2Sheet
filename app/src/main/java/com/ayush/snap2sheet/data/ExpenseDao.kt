@@ -14,26 +14,24 @@ interface ExpenseDao {
     @Delete
     suspend fun deleteExpense(expense: Expense)
 
-    @Query("SELECT * FROM expenses ORDER BY date DESC, id DESC")
-    fun getAllExpenses(): Flow<List<Expense>>
+    @Query("SELECT * FROM expenses WHERE userId = :userId AND groupId = '' ORDER BY date DESC, id DESC")
+    fun getAllExpenses(userId: String): Flow<List<Expense>>
 
-    @Query("SELECT * FROM expenses WHERE merchantName LIKE '%' || :query || '%' ORDER BY date DESC")
-    fun searchExpenses(query: String): Flow<List<Expense>>
+    @Query("SELECT * FROM expenses WHERE userId = :userId AND groupId = '' AND merchantName LIKE '%' || :query || '%' ORDER BY date DESC")
+    fun searchExpenses(userId: String, query: String): Flow<List<Expense>>
 
-    @Query("SELECT * FROM expenses WHERE category = :category ORDER BY date DESC")
-    fun getExpensesByCategory(category: String): Flow<List<Expense>>
+    @Query("SELECT * FROM expenses WHERE userId = :userId AND groupId = '' AND category = :category ORDER BY date DESC")
+    fun getExpensesByCategory(userId: String, category: String): Flow<List<Expense>>
 
-    @Query("SELECT category, SUM(amount) as total FROM expenses GROUP BY category")
-    fun getCategoryTotals(): Flow<List<CategoryTotal>>
+    @Query("SELECT category, SUM(amount) as total FROM expenses WHERE userId = :userId AND groupId = '' GROUP BY category")
+    fun getCategoryTotals(userId: String): Flow<List<CategoryTotal>>
 
-    @Query("SELECT substr(date, 1, 7) as month, SUM(amount) as total FROM expenses GROUP BY month ORDER BY month")
-    fun getMonthlyTotals(): Flow<List<MonthlyTotal>>
+    @Query("SELECT substr(date, 1, 7) as month, SUM(amount) as total FROM expenses WHERE userId = :userId AND groupId = '' GROUP BY month ORDER BY month")
+    fun getMonthlyTotals(userId: String): Flow<List<MonthlyTotal>>
 
-    @Query("SELECT SUM(amount) FROM expenses")
-    fun getTotalExpense(): Flow<Double?>
+    @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND groupId = ''")
+    fun getTotalExpense(userId: String): Flow<Double?>
     
-    @Query("DELETE FROM expenses")
-    suspend fun clearAll()
+    @Query("DELETE FROM expenses WHERE userId = :userId AND groupId = ''")
+    suspend fun clearAll(userId: String)
 }
-
-

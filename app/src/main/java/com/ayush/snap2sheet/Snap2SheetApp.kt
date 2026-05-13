@@ -4,10 +4,12 @@ import android.app.Application
 import androidx.room.Room
 import com.ayush.snap2sheet.data.ExpenseDatabase
 import com.ayush.snap2sheet.data.ExpenseRepository
+import com.ayush.snap2sheet.data.FirestoreRepository
 
 class Snap2SheetApp : Application() {
     lateinit var database: ExpenseDatabase
     lateinit var repository: ExpenseRepository
+    lateinit var firestoreRepository: FirestoreRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -15,7 +17,8 @@ class Snap2SheetApp : Application() {
             this,
             ExpenseDatabase::class.java,
             "expense_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
         repository = ExpenseRepository(database.expenseDao())
+        firestoreRepository = FirestoreRepository()
     }
 }

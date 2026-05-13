@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.ayush.snap2sheet.R
 import com.ayush.snap2sheet.data.Expense
 import com.ayush.snap2sheet.databinding.FragmentScanBinding
 import com.ayush.snap2sheet.utils.ViewModelFactory
@@ -25,11 +27,22 @@ class ScanFragment : Fragment() {
     }
     private var imageUri: Uri? = null
 
+    // Camera capture contract
     private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success && imageUri != null) {
             viewModel.processImage(requireContext(), imageUri!!)
         } else {
             Toast.makeText(requireContext(), "Capture failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Gallery picker contract
+    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            imageUri = uri
+            viewModel.processImage(requireContext(), uri)
+        } else {
+            Toast.makeText(requireContext(), "No image selected", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -41,10 +54,16 @@ class ScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Camera capture button
         binding.btnCapture.setOnClickListener {
             val photoFile = File(requireContext().cacheDir, "receipt_${System.currentTimeMillis()}.jpg")
             imageUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", photoFile)
             takePicture.launch(imageUri)
+        }
+
+        // Gallery upload button
+        binding.btnGallery.setOnClickListener {
+            pickImage.launch("image/*")
         }
 
         binding.btnSave.setOnClickListener {
@@ -71,13 +90,21 @@ class ScanFragment : Fragment() {
 
         viewModel.receiptData.observe(viewLifecycleOwner) { data ->
             binding.etMerchant.setText(data.merchantName)
-            binding.etAmount.setText(data.amount.toString())
+            binding.etAmount.setText(if (data.amount > 0) data.amount.toString() else "")
             binding.etDate.setText(data.date)
+
+            // Auto-select detected category in spinner
+            val categoriesArray = resources.getStringArray(R.array.categories_array)
+            val categoryIndex = categoriesArray.indexOf(data.category)
+            if (categoryIndex >= 0) {
+                binding.spinnerCategory.setSelection(categoryIndex)
+            }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.btnCapture.isEnabled = !isLoading
+            binding.btnGallery.isEnabled = !isLoading
             binding.btnSave.isEnabled = !isLoading
         }
 
